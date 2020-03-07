@@ -1,19 +1,36 @@
 #include <stdio.h>
 #include <windows.h>
-#include<stdio.h>
+#include <stdio.h>
+#include <unistd.h>
+
+#include <conio.h>
+#include <ctype.h>
 
 //Fonction qui permet d'afficher l'aide du jeu
+void afficherMenu();
 void aideJeu();
+void jeu();
 
 int main() {
     //Ligne qui permet au programme de comprendre l'UTF-8
     SetConsoleOutputCP(65001);
+
+    afficherMenu();
+
+    return 0;
+}
+
+void afficherMenu(){
 
     //Déclaration et initialisation des variables
     int choixMenu = 0;
 
     //Boucle qui permet de répéter les actions à l'intérieur tant que la condition de sortie n'est pas respecter
     do{
+
+        //efface le terminal
+        system("@cls||clear");  //source: https://stackoverflow.com/a/33450696
+
         //Affichage d'un menu de séléction d'action
         printf("Menu\n\n");
         printf(" 1)  Login\n");
@@ -26,19 +43,22 @@ int main() {
 
         //scan et stock la réponse dans la variable choixMenu
         scanf("%d", &choixMenu);
+        //choixMenu = 2;
 
-        //Effectue une suite d'action différente selon la réponse stockée
         switch (choixMenu) {
             case 1:
-                printf("Vous avez choisi de vous login !");
+                printf("Vous avez choisi de vous login !\n");
+                _getch();
                 break;
 
             case 2:
-                printf("Vous avez choisi de jouer à la bataille navale !");
+                getchar(); // erreur passe le premier scanf après le premier passage de la boucle: https://stackoverflow.com/a/9562355
+                jeu();
                 break;
 
             case 3:
-                printf("Vous avez choisi d'afficher les scores précédants !");
+                printf("Vous avez choisi d'afficher les scores précédants !\n");
+                _getch();
                 break;
 
             case 4:
@@ -46,7 +66,7 @@ int main() {
                 break;
 
             case 5:
-                printf("Fermeture du jeu");
+                printf("Fermeture du jeu.\n");
                 break;
 
                 //Cela donne une suite d'actionà effectuer si la réponse ne correspond pas à une action proposée
@@ -54,10 +74,9 @@ int main() {
                 printf("Cette action n'existe pas !\n");
                 break;
         }
-        //Condition pour rester dans la boucle
-    }while(choixMenu != 1 && choixMenu != 2 && choixMenu != 3 && choixMenu != 4);
 
-    return 0;
+        //Condition pour rester dans la boucle
+    }while(choixMenu > 0 && choixMenu <= 4);
 }
 
 void aideJeu(){
@@ -76,21 +95,192 @@ void aideJeu(){
            "Il va y avoir une grille avec des coordonnées.\n"
            "Il va te falloir rentrer les coordonnées de l'endroit de la grille que tu souhaite attaquer.\n\n");
     //Les choix possibles après la lecture des règles
-    printf(" 1)  Retourner au menu du jeu\n");
-    printf(" 2)  Quitter le jeu\n\n");
-    printf("Que souhaitez-vous faire :");
+    printf("Appuyer sur une touche pour revenir au menu\n");
     //Scan et stock le résultat entrer
-    scanf("%d", &choixAide);
+    _getch();
+    system("@cls||clear");
+}
 
-    //Fait une suite d'action selon la réponse stocké dans choixAide
-    switch (choixAide){
-        //Le cas ou la réponse est 1 le programme fait les actions à l'intérieur
-        case 1:
-            printf("Vous allez retourner au menu principal du jeu.");
-            main();
+void jeu(){
 
-        case 2:
-            printf("Le jeu va se fermer");
-            break;
+    const int LARGEUR = 10; //Colonnes
+    const int HAUTEUR = 10; //Lignes
+
+    int grille[LARGEUR][HAUTEUR];
+    int entreeLigne = 0;
+    char entreeColonne = 0;
+    int entreeColonneInt = 0;
+    int jeuEnCours = 1;
+
+    //initialisation du tableau
+    //états:
+    // 0 = Rien
+    // 1 = Bateau touché
+    // 2 = Bateau coulé
+    // 3 = Bateau non découvert
+    // 4 = Eau
+    for(int h = 0; h < HAUTEUR; h++){
+        for(int l = 0; l < LARGEUR; l++){
+            grille[l][h] = 0;
+        }
     }
+
+    //placement des bateaux
+    //Porte-avion 5 cases
+    grille[1][0] = 3;
+    grille[2][0] = 3;
+    grille[3][0] = 3;
+    grille[4][0] = 3;
+    grille[5][0] = 3;
+    int porteAvionCoule = 0;
+
+    //Croisseur 4 cases
+    grille[0][9] = 3;
+    grille[1][9] = 3;
+    grille[2][9] = 3;
+    grille[3][9] = 3;
+    int croisseurCoule = 0;
+
+    //Contre-croisseur 3 cases
+    grille[3][4] = 3;
+    grille[3][5] = 3;
+    grille[3][6] = 3;
+    int contreCroisseurCoule = 0;
+
+    //Sous-Marin 3 cases
+    grille[7][2] = 3;
+    grille[7][3] = 3;
+    grille[7][4] = 3;
+    int sousMarin = 0;
+
+    //Torpilleur 2 cases
+    grille[7][7] = 3;
+    grille[8][7] = 3;
+    int torpilleur = 0;
+
+    do{
+
+        system("@cls||clear");
+        printf("Bataille navale\n\n");
+
+        // légende
+        printf("\n\n\033[0;31mRouge: Touché"
+               "   \033[0;32mVert: Coulé"
+               "   \033[0;36mBleu: Loupé\n\n\033[0;37m");
+
+        //Affichage de la grille
+
+        //coordonnées X
+        printf("  ");
+        for(int i = 0; i < LARGEUR; i++){
+            printf(" %c", 65 + i);
+        }
+
+        printf("\n");
+
+        for(int h = 0; h < HAUTEUR; h++){
+
+            //coordonnées Y
+            printf("%2d", h + 1);
+
+            for(int l = 0; l < LARGEUR; l++){
+
+                switch (grille[l][h]) {
+                    case 1: // bateau touché
+                        printf("\033[0;31m"); //couleur rouge
+                        break;
+
+                    case 2: // bateau coulé
+                        printf("\033[0;32m"); //couleur verte
+                        break;
+
+                    case 4: // eau
+                        printf("\033[0;36m"); //couleur bleu
+                        break;
+
+                        // cheat
+                        /*case 3:
+                            printf("\033[0;35m"); //couleur verte
+                            break;*/
+
+                    default:
+                        printf("\033[0;37m"); //couleur par défaut
+                        break;
+                }
+
+                printf(" \u2588");
+
+                // retour à la ligne après l cases
+                if((l + 1) % 10 == 0){
+                    printf("\n");
+                }
+            }
+        }
+
+        // vérifier les conditions de victoire
+        if(porteAvionCoule == 1 && croisseurCoule == 1 && contreCroisseurCoule == 1 && sousMarin == 1 && torpilleur == 1){
+            printf("\nBravo ! vous avez gagné !\n\nAppuyez sur une touche pour revenir au menu");
+            _getch();
+            jeuEnCours = 0;
+        }
+
+        do{
+        printf("\nQuelle case veux-tu attaquer ?\nLettre de colonne: ");
+        scanf("%c", &entreeColonne);
+        printf("Numéro de ligne: ");
+        scanf("%d", &entreeLigne);
+        getchar(); // erreur passe le premier scanf après le premier passage de la boucle: https://stackoverflow.com/a/9562355
+        }while(!(entreeColonne >= 65 && entreeColonne <= 65 + LARGEUR && entreeLigne >=1 && entreeLigne <= 10));
+
+        entreeColonneInt = entreeColonne - 65;
+
+        // conditions de touché
+        if(grille[entreeColonneInt][entreeLigne - 1] == 3){
+            grille[entreeColonneInt][entreeLigne - 1] = 1;
+        } else {
+            grille[entreeColonneInt][entreeLigne - 1] = 4;
+        }
+
+        // conditions de coulé
+        if(grille[1][0] == 1 && grille[2][0] == 1 && grille[3][0] == 1 && grille[4][0] == 1 && grille[5][0] == 1){
+            grille[1][0] = 2;
+            grille[2][0] = 2;
+            grille[3][0] = 2;
+            grille[4][0] = 2;
+            grille[5][0] = 2;
+            porteAvionCoule = 1;
+        }
+
+        if(grille[0][9] == 1 && grille[1][9] == 1 && grille[2][9] == 1 && grille[3][9] == 1){
+            grille[0][9] = 2;
+            grille[1][9] = 2;
+            grille[2][9] = 2;
+            grille[3][9] = 2;
+            croisseurCoule = 1;
+        }
+
+        if(grille[3][4] == 1 && grille[3][5] == 1 && grille[3][6] == 1){
+            grille[3][4] = 2;
+            grille[3][5] = 2;
+            grille[3][6] = 2;
+            contreCroisseurCoule = 1;
+        }
+
+        if(grille[7][2] == 1 && grille[7][3] == 1 && grille[7][4] == 1){
+            grille[7][2] = 2;
+            grille[7][3] = 2;
+            grille[7][4] = 2;
+            sousMarin = 1;
+        }
+
+        if(grille[7][7] == 1 && grille[8][7] == 1){
+            grille[7][7] = 2;
+            grille[8][7] = 2;
+            torpilleur = 1;
+        }
+
+        //_getch();
+
+        printf("\n\n\n\n");
+    }while(jeuEnCours == 1);
 }
