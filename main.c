@@ -80,7 +80,7 @@ void afficherMenu(){
 }
 
 void aideJeu(){
-
+    system("@cls||clear");
     //Déclaration et initialisation des variable
     int choixAide = 0;
     //Texte imprimer comportant les règle de la bataille navale
@@ -158,6 +158,7 @@ void jeu(){
     grille[8][7] = 3;
     int torpilleur = 0;
 
+    //Affichage des case avec les différentes couleurs
     do{
 
         system("@cls||clear");
@@ -198,7 +199,7 @@ void jeu(){
                         printf("\033[0;36m"); //couleur bleu
                         break;
 
-                        // cheat
+                        //cheat
                         /*case 3:
                             printf("\033[0;35m"); //couleur verte
                             break;*/
@@ -211,26 +212,50 @@ void jeu(){
                 printf(" \u2588");
 
                 // retour à la ligne après l cases
-                if((l + 1) % 10 == 0){
+                if((l + 1) % LARGEUR == 0){
                     printf("\n");
                 }
             }
         }
 
-        // vérifier les conditions de victoire
-        if(porteAvionCoule == 1 && croisseurCoule == 1 && contreCroisseurCoule == 1 && sousMarin == 1 && torpilleur == 1){
-            printf("\nBravo ! vous avez gagné !\n\nAppuyez sur une touche pour revenir au menu");
-            _getch();
-            jeuEnCours = 0;
-        }
 
         do{
-        printf("\nQuelle case veux-tu attaquer ?\nLettre de colonne: ");
-        scanf("%c", &entreeColonne);
+
+            //Boucle qui empêche les coordonnée en dehors de la grille de jeu
+            do{
+                printf("\nQuelle case veux-tu attaquer ?\nLettre de colonne: ");
+                scanf("%c", &entreeColonne);
+                if(!(entreeColonne >= 65 && entreeColonne <= 65 + LARGEUR)){
+                    printf("La coordonnée n'est pas sur le tableau ! Veuillez rentrer une donnée valide");
+                };
+                getchar(); // erreur passe le premier scanf après le premier passage de la boucle: https://stackoverflow.com/a/9562355
+            }while(!(entreeColonne >= 65 && entreeColonne <= 65 + LARGEUR));
+
+
+            //Boucle qui empêche les coordonnée en dehors de la grille de jeu
+            do{
+                printf("Numéro de ligne: ");
+                scanf("%d", &entreeLigne);
+                if(!(entreeLigne >=1 && entreeLigne <= 10)){
+                    printf("La coordonnée n'est pas sur le tableau ! Veuillez rentrer une donnée valide");
+                };
+            }while(!(entreeLigne >=1 && entreeLigne <= 10));
+
+            if(grille[entreeColonne][entreeLigne] == 1 || grille[entreeColonne][entreeLigne] == 2 || grille[entreeColonne][entreeLigne] == 4){
+                printf("Test");
+            }
+            //Boucle qui empêche de tirer sur une case déjà touchée
+        }while(grille[entreeColonne][entreeLigne] == 1 || grille[entreeColonne][entreeLigne] == 2 || grille[entreeColonne][entreeLigne] == 4);
+
+
+        /*do{
+
         printf("Numéro de ligne: ");
         scanf("%d", &entreeLigne);
         getchar(); // erreur passe le premier scanf après le premier passage de la boucle: https://stackoverflow.com/a/9562355
         }while(!(entreeColonne >= 65 && entreeColonne <= 65 + LARGEUR && entreeLigne >=1 && entreeLigne <= 10));
+         */
+
 
         entreeColonneInt = entreeColonne - 65;
 
@@ -279,8 +304,11 @@ void jeu(){
             torpilleur = 1;
         }
 
-        //_getch();
-
-        printf("\n\n\n\n");
+        // vérifier les conditions de victoire
+        if(porteAvionCoule == 1 && croisseurCoule == 1 && contreCroisseurCoule == 1 && sousMarin == 1 && torpilleur == 1){
+            printf("\nBravo ! vous avez gagné !\n\nAppuyez sur une touche pour revenir au menu");
+            _getch();
+            jeuEnCours = 0;
+        }
     }while(jeuEnCours == 1);
 }
