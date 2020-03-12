@@ -227,6 +227,7 @@ void jeu(){
                 scanf("%c", &entreeColonne);
                 if(!(entreeColonne >= 65 && entreeColonne <= 65 + LARGEUR)){
                     printf("La coordonnée n'est pas sur le tableau ! Veuillez rentrer une donnée valide");
+                    printf("test");
                 };
                 getchar(); // erreur passe le premier scanf après le premier passage de la boucle: https://stackoverflow.com/a/9562355
             }while(!(entreeColonne >= 65 && entreeColonne <= 65 + LARGEUR));
@@ -239,13 +240,13 @@ void jeu(){
                 if(!(entreeLigne >=1 && entreeLigne <= 10)){
                     printf("La coordonnée n'est pas sur le tableau ! Veuillez rentrer une donnée valide");
                 };
-            }while(!(entreeLigne >=1 && entreeLigne <= 10));
+            }while(!(entreeLigne >= 1 && entreeLigne <= 10));
 
-            if(grille[entreeColonne][entreeLigne] == 1 || grille[entreeColonne][entreeLigne] == 2 || grille[entreeColonne][entreeLigne] == 4){
-                printf("Test");
-            }
+            //Transforme le char en int
+            entreeColonneInt = entreeColonne - 65;
+
             //Boucle qui empêche de tirer sur une case déjà touchée
-        }while(grille[entreeColonne][entreeLigne] == 1 || grille[entreeColonne][entreeLigne] == 2 || grille[entreeColonne][entreeLigne] == 4);
+        }while(grille[entreeColonneInt][entreeLigne] == 1 || grille[entreeColonneInt][entreeLigne] == 2 || grille[entreeColonneInt][entreeLigne] == 4);
 
 
         /*do{
@@ -257,7 +258,7 @@ void jeu(){
          */
 
 
-        entreeColonneInt = entreeColonne - 65;
+
 
         // conditions de touché
         if(grille[entreeColonneInt][entreeLigne - 1] == 3){
