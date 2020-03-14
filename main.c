@@ -107,8 +107,8 @@ void aideJeu(){
 void jeu(){
 
     // déclaration des constantes
-    const int LARGEUR = 20; // colonnes
-    const int HAUTEUR = 20; // lignes
+    const int LARGEUR = 10; // colonnes
+    const int HAUTEUR = 10; // lignes
     const int A_ASCII = 65; // code du A en ASCII
 
     // déclaration des variables
