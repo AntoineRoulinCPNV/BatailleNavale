@@ -321,14 +321,6 @@ void jeu(char nomUser[21]){
                 writeLog("Touché !");
                 break;
 
-            case 1:
-            case 2:
-            case 3:
-            case 9:
-            case 10:
-            case 11:
-            case 12:
-            case 13:
             default:
                 printf("\nUn tir a déjà été effectuer sur cette coordonné\n");
                 break;
@@ -526,8 +518,6 @@ void chargementMap(const int HAUTEUR, const int LARGEUR, const int A_ASCII,int g
     
     fileMaps = fopen(map, "r");
 
-    //../maps/map6.txt
-
     while (fgets(buffer, bufferLength, fileMaps)) {
 
         sscanf(buffer, "%15s : %15s %15s", parametre, valeurLS, valeurH);
@@ -563,5 +553,3 @@ void changerEtatEnCoule(int etat, const int HAUTEUR, const int LARGEUR, int gril
         }
     }
 }
-
-//todo vérifier le nom de toute les variable si ils sont claires
