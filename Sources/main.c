@@ -1,9 +1,9 @@
 /*
  * Projet : Bataille Navale
  * Auteur : Antoine Roulin
- * Date : 01.04.2020
+ * Date : 08.04.2020
  * Version : V1.0
- * Description : Permet de jouer a la bataille navale et de pouvoir afficher l'aide du jeu
+ * Description : Permet de jouer a la bataille navale seul avec des cartes déjà créer. On peut afficher les scores qui ont été fait précédemment et afficher l'aide du jeux et se connecter pour enregistrer son score avec se nom avec le quelle vous vous êtes connecté
  */
 
 #include <stdio.h>
