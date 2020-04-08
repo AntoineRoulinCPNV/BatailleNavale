@@ -258,7 +258,7 @@ void jeu(char nomUser[21]){
                 printf("Numéro de ligne: ");
                 scanf("%d", &entreeLigne);
                 if(!(entreeLigne >=1 && entreeLigne <= HAUTEUR)){
-                    printf("\nLa coordonnée n'est pas sur le tableau, veuillez rentrer une donnée valide ");
+                    printf("\nLa coordonnée n'est pas sur le tableau, veuillez rentrer une donnée valide\n");
                 }
                 getchar();
             } while(!(entreeLigne >= 1 && entreeLigne <= HAUTEUR));
