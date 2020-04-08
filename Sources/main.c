@@ -105,7 +105,7 @@ void aideJeu(){
     printf("Aide du Jeu\n\n");
     printf("Le jeu de la bataille navale est simple.\n\n"
            "Ton but est de couler les 5 bateaux.\n\n"
-           "Il y a 1 Porte-avion qui fait 5 cases.\n"
+           "Il y a 1 Porte-avions qui fait 5 cases.\n"
            "Il y a 1 Croiseur qui fait 4 cases.\n"
            "Il y a 1 Contre-croiseur qui fait 3 cases.\n"
            "Il y a 1 Sous-Marin qui fait 3 cases.\n"
@@ -222,7 +222,7 @@ void jeu(char nomUser[21]){
                 printf("\nBien joué ! Tu as touché un bateau\n");
                 break;
             case 2:
-                printf("\nBien joué ! Tu as touché et coulé le porte-avion\n");
+                printf("\nBien joué ! Tu as touché et coulé le porte-avions\n");
                 break;
             case 3:
                 printf("\nBien joué ! Tu as touché et coulé le croiseur\n");
@@ -334,7 +334,7 @@ void jeu(char nomUser[21]){
             etat = 9;
             changerEtatEnCoule(etat, HAUTEUR, LARGEUR, grille);
             message = 2;
-            writeLog("Porte avion coulé");
+            writeLog("Porte avions coulé");
             porteAvionCount = 0;    // évite que le log s'écrive a chaque tour du while et que le message pour l'utilisateur soie supprimer et remplacer par un autre
             porteAvionCoule = 1;    // permet que le compteur soie remis a zero pour éviter les logs et messages pour l'utilisateur excessif ou faux
         }
